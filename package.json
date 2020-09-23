@@ -1,0 +1,28 @@
+{
+  "name": "team-profile-generator",
+  "version": "1.0.0",
+  "description": "to generate a webpage that displays my team's basic info",
+  "main": "Index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ann760/team-profile-generator.git"
+  },
+  "author": "Ann-Marie Orozco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ann760/team-profile-generator/issues"
+  },
+  "homepage": "https://github.com/ann760/team-profile-generator#readme",
+  "devDependencies": {
+    "jest": "^26.4.2"
+  },
+  "dependencies": {
+    "inquirer": "^7.3.3"
+  }
+}
