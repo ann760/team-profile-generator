@@ -90,7 +90,7 @@ const promptEngineer = () => {
     ])
     .then((employeeData) => {
       teamData.engineer.push(employeeData);
-      if (employeeData.confirmAddEmployee) {       
+      if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
         console.log(teamData);
@@ -196,15 +196,14 @@ const promptEmployee = (teamData) => {
         name: "eType",
         message: "Select the employee type? (Required)",
         choices: ["Engineer", "Intern"],
-      }
-      return inquirer.prompt(employeeType)
-        .then((type) => {
-          if (type.eType === "Engineer") {
-            return promptEngineer();
-          } else {
-            return promptIntern();
-          }
-        })
+      };
+      return inquirer.prompt(employeeType).then((type) => {
+        if (type.eType === "Engineer") {
+          return promptEngineer();
+        } else {
+          return promptIntern();
+        }
+      });
       console.log(checkType);
     })
     .then((employeeData) => {
@@ -215,7 +214,6 @@ const promptEmployee = (teamData) => {
       } else {
         console.log(teamData);
         return teamData;
-        
       }
     });
 };
