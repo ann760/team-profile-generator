@@ -1,12 +1,14 @@
 const inquirer = require("inquirer");
 const generatePage = require("./src/page-template.js");
-const fs = require('fs');
+const fs = require("fs");
+const Employee = require("./lib/Employee.js");
+const teamData = [];
 
 const promptManager = () => {
   return inquirer.prompt([
     {
       type: "input",
-      name: "name",
+      name: "managerName",
       message: "Enter the Team Manager's name? (Required)",
       validate: (nameInput) => {
         if (nameInput) {
@@ -59,6 +61,82 @@ const promptManager = () => {
   ]);
 };
 
+const promptEngineer = () => {
+  // If there's no 'engineer' array property, create one
+  if (!teamData.engineer) {
+    teamData.engineer = [];
+  }
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "github",
+        message: "Enter the employee's GitHub? (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter GitHub!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "confirm",
+        name: "confirmAddEmployee",
+        message: "Would you like to enter another Employee",
+        default: false,
+      },
+    ])
+    .then((employeeData) => {
+      teamData.engineer.push(employeeData);
+      if (employeeData.confirmAddEmployee) {       
+        return promptEmployee(teamData);
+      } else {
+        console.log(teamData);
+        return teamData;
+      }
+    });
+};
+
+const promptIntern = () => {
+  // If there's no 'employees' array property, create one
+  if (!teamData.intern) {
+    teamData.intern = [];
+  }
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "school",
+        message: "Enter the intern's school? (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter school!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "confirm",
+        name: "confirmAddEmployee",
+        message: "Would you like to enter another Employee?",
+        default: false,
+      },
+    ])
+    .then((employeeData) => {
+      teamData.intern.push(employeeData);
+      if (employeeData.confirmAddEmployee) {
+        return promptEmployee(teamData);
+      } else {
+        console.log(teamData);
+        return teamData;
+      }
+    });
+};
+
 const promptEmployee = (teamData) => {
   // If there's no 'employees' array property, create one
   if (!teamData.employee) {
@@ -66,26 +144,12 @@ const promptEmployee = (teamData) => {
   }
 
   console.log(`
-  =================
-  Add a New Employee
-  =================
-  `);
+      =================
+      Add a New Employee
+      =================
+      `);
   return inquirer
     .prompt([
-      {
-        type: "list",
-        name: "employeeType",
-        message: "Select the employee type? (Required)",
-        choices: ["Engineer", "Intern"],
-        validate: (nameInput) => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please select a employee type!");
-            return false;
-          }
-        },
-      },
       {
         type: "input",
         name: "name",
@@ -125,22 +189,46 @@ const promptEmployee = (teamData) => {
           }
         },
       },
-      {
-        type: "confirm",
-        name: "confirmAddProject",
-        message: "Would you like to enter another project?",
-        default: false,
-      },
     ])
+    .then((checkType) => {
+      let employeeType = {
+        type: "list",
+        name: "eType",
+        message: "Select the employee type? (Required)",
+        choices: ["Engineer", "Intern"],
+      }
+      return inquirer.prompt(employeeType)
+        .then((type) => {
+          if (type.eType === "Engineer") {
+            return promptEngineer();
+          } else {
+            return promptIntern();
+          }
+        })
+      console.log(checkType);
+    })
     .then((employeeData) => {
       teamData.employee.push(employeeData);
       if (employeeData.confirmAddEmployee) {
+        console.log(teamData);
         return promptEmployee(teamData);
       } else {
+        console.log(teamData);
         return teamData;
+        
       }
     });
 };
+
+// .then(response => {
+//   const employee = new Employee(response.managerName, response.id, response.email, response.officeNumber)
+//   teamData.employee.push(employee)
+//   if (response.confirmAddEmployee) {
+//         return promptEmployee(teamData);
+//       } else {
+//         return teamData;
+//       }
+// });
 
 promptManager()
   .then(promptEmployee)
@@ -152,33 +240,33 @@ promptManager()
   })
   .then((writeFileResponse) => {
     console.log(writeFileResponse);
-   // return copyFile();
+    // return copyFile();
   })
-//   .then((copyFileResponse) => {
-//     console.log(copyFileResponse);
-//   })
+  //   .then((copyFileResponse) => {
+  //     console.log(copyFileResponse);
+  //   })
   .catch((err) => {
     console.log(err);
   });
 //console.log("Style sheet copied successfully!");
 
-const writeFile = fileContent => {
-    return new Promise((resolve, reject) => {
-      fs.writeFile('./dist/index.html', fileContent, err => {
-        // if there's an error, reject the Promise and send the error to the Promise's `.catch()` method
-        if (err) {
-          reject(err);
-          // return out of the function here to make sure the Promise doesn't accidentally execute the resolve() function as well
-          return;
-        }
+const writeFile = (fileContent) => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile("./dist/index.html", fileContent, (err) => {
+      // if bad, reject the Promise and send the error to the `.catch()` method
+      if (err) {
+        reject(err);
+        // return out of the function
+        return;
+      }
 
-        // if everything went well, resolve the Promise and send the successful data to the `.then()` method
-        resolve({
-          ok: true,
-          message: 'File created!'
-        });
+      // if good, resolve the Promise and send the successful data to the `.then()` method
+      resolve({
+        ok: true,
+        message: "File created!",
       });
     });
+  });
 };
 
 // fs.copyFile('./src/style.css', './dist/style.css', err => {
@@ -187,4 +275,4 @@ const writeFile = fileContent => {
 //     return;
 //   }
 //   console.log('Style sheet copied successfully!');
-// });
+// })

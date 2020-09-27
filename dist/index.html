@@ -1,8 +1,4 @@
-module.exports = templateData => {
-    // destructure page data by section
-    const { employee, ...header } = templateData;
-  
-    return `
+
     <!DOCTYPE html>
     <html lang="en">
   
@@ -27,42 +23,24 @@ module.exports = templateData => {
       <main class="container my-5">
       <div class="m-5 row justify-content-around">
         <!-- Manager -->
-        <div class="col-12 col-md-6 col-xl-3 mb-3" id="cards">
+        <div class="col-12 col-md-6 col-xl-3 mb-3">
           <div class="card">
             <h4 class="card-header bg-dark text-light">
-              ${header.managerName}
+              Annie
             </h4>
             <ul id="managerInfo" class="list-group list-group-flush">
               <li class="listInfo">
-                <span class="badge badge-primary badge-pill">${header.id}</span>
-                <p class="m-1">Email: ${header.email}</p>
-                <p class="m-1">Office number: ${header.officeNumber}</p>
+                <span class="badge badge-primary badge-pill">Annie</span>
+                <p class="m-1">Email: Annie</p>
+                <p class="m-1">Office number: Annie</p>
               </li>
             </ul>
           </div>
         </div>
       </main>
       <footer class="container text-center py-3">
-        <h3 class="text-dark">&copy; ${new Date().getFullYear()} by Ann-Marie Orozco</h3>
+        <h3 class="text-dark">&copy; 2020 by Ann-Marie Orozco</h3>
       </footer>
-      <script>
-      
-      <div class="card">
-            <h4 class="card-header bg-dark text-light">
-              ${header.employeeName}
-            </h4>
-            <ul id="managerInfo" class="list-group list-group-flush">
-              <li class="listInfo">
-                <span class="badge badge-primary badge-pill">${header.id}</span>
-                <p class="m-1">Email: ${header.email}</p>
-                <p class="m-1">Office number: ${header.getRole}</p>
-              </li>
-            </ul>
-          </div>
-      </script>
     </body>
     </html>
-    `;
-  };
-
-//   ${generateEmployee(employee)}
+    
