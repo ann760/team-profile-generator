@@ -5,3 +5,7 @@ test("gets the engineer's github", () => {
     
     expect(engineer.github).toEqual(expect.any(String));
   });
+
+  test("gets the employee's role", () => {
+    expect(engineer.getRole()).toEqual(expect.any(String));
+  });

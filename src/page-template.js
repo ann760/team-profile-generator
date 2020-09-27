@@ -1,6 +1,39 @@
-module.exports = templateData => {
+const generateManager = manager => {
+ 
+  return `
+        <div class="card-header bg-dark text-light">
+          <h4> ${manager.getRole()}</h4>
+          <h4> ${manager.getName()}</h4>
+          <ul id="managerInfo" class="list-group list-group-flush">
+            <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${manager.getId()}</li>
+            <li class="list-group-item"><a href="mailto:${manager.getEmail()}">Email Address</a>
+            <li class="m-1"><p>School Name</p>${manager.getSchool()}</li>
+          </ul>
+        </div>
+      `;
+  };
+
+const generateInterns = intern => {
+  if (!intern) {
+    return '';
+  }
+  return `
+        <div class="card-header bg-dark text-light">
+          <h4> ${intern.getRole()}</h4>
+          <h4> ${intern.getName()}</h4>
+          <ul id="managerInfo" class="list-group list-group-flush">
+            <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${intern.getId()}</li>
+            <li class="list-group-item"><a href="mailto:${intern.getEmail()}">Email Address</a>
+            <li class="m-1"><p>School Name</p>${intern.getSchool()}</li>
+          </ul>
+        </div>
+      `;
+  };
+
+module.exports = teamData => {
     // destructure page data by section
-    const { employee, ...header } = templateData;
+   // const {  } = templateData;
+   console.log(teamData)
   
     return `
     <!DOCTYPE html>
@@ -28,18 +61,7 @@ module.exports = templateData => {
       <div class="m-5 row justify-content-around">
         <!-- Manager -->
         <div class="col-12 col-md-6 col-xl-3 mb-3" id="cards">
-          <div class="card">
-            <h4 class="card-header bg-dark text-light">
-              ${header.managerName}
-            </h4>
-            <ul id="managerInfo" class="list-group list-group-flush">
-              <li class="listInfo">
-                <span class="badge badge-primary badge-pill">${header.id}</span>
-                <p class="m-1">Email: ${header.email}</p>
-                <p class="m-1">Office number: ${header.officeNumber}</p>
-              </li>
-            </ul>
-          </div>
+          ${generateManager(teamData.Manager)}
         </div>
       </main>
       <footer class="container text-center py-3">
@@ -48,17 +70,10 @@ module.exports = templateData => {
       <script>
       
       <div class="card">
-            <h4 class="card-header bg-dark text-light">
-              ${header.employeeName}
-            </h4>
-            <ul id="managerInfo" class="list-group list-group-flush">
-              <li class="listInfo">
-                <span class="badge badge-primary badge-pill">${header.id}</span>
-                <p class="m-1">Email: ${header.email}</p>
-                <p class="m-1">Office number: ${header.getRole}</p>
-              </li>
-            </ul>
-          </div>
+          <div class="col-12 col-md-6 col-xl-3 mb-3" id="cards">
+          ${generateInterns()}
+          
+        </div>
       </script>
     </body>
     </html>

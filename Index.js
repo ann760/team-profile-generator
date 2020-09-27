@@ -1,77 +1,144 @@
 const inquirer = require("inquirer");
-const generatePage = require("./src/page-template.js");
+const generatePage = require("./src/page-template");
 const fs = require("fs");
-const Employee = require("./lib/Employee.js");
+const Engineer = require("./lib/Engineer");
+const Mananger = require("./lib/Manager");
+const Intern= require("./lib/Intern");
 const teamData = [];
 
-const promptManager = () => {
-  return inquirer.prompt([
-    {
-      type: "input",
-      name: "managerName",
-      message: "Enter the Team Manager's name? (Required)",
-      validate: (nameInput) => {
-        if (nameInput) {
-          return true;
-        } else {
-          console.log("Please enter name!");
-          return false;
-        }
-      },
-    },
-    {
-      type: "input",
-      name: "id",
-      message: "Enter Manager's employee id (Required)",
-      validate: (nameInput) => {
-        if (nameInput) {
-          return true;
-        } else {
-          console.log("Please enter id!");
-          return false;
-        }
-      },
-    },
-    {
-      type: "input",
-      name: "email",
-      message: "Enter Manager's email (Required)",
-      validate: (nameInput) => {
-        if (nameInput) {
-          return true;
-        } else {
-          console.log("Please enter email!");
-          return false;
-        }
-      },
-    },
-    {
-      type: "input",
-      name: "officeNumber",
-      message: "Enter Manager's employee office number (Required)",
-      validate: (nameInput) => {
-        if (nameInput) {
-          return true;
-        } else {
-          console.log("Please enter phone number!");
-          return false;
-        }
-      },
-    },
-  ]);
-};
 
-const promptEngineer = () => {
-  // If there's no 'engineer' array property, create one
-  if (!teamData.engineer) {
-    teamData.engineer = [];
-  }
+const promptManager = () => {
+
+  console.log(`
+  =================
+  Add a New Manager
+  =================
+  `);
+  
   return inquirer
     .prompt([
       {
         type: "input",
+        name: "managerName",
+        message: "Enter the Team Manager's name? (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter name!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Enter Manager's employee id (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter id!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Enter Manager's email (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter email!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "officeNumber",
+        message: "Enter Manager's employee office number (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter phone number!");
+            return false;
+          }
+        },
+      },
+    ]) 
+    .then((employeeData) => {
+      const manager = new Mananger(employeeData.managerName, employeeData.id, employeeData.email, employeeData.officeNumber, Mananger.getRole());
+      teamData.push(manager);
+      if (employeeData.confirmAddEmployee) {
+        return promptEmployee(teamData);
+      } else {
+        console.log(teamData);
+        return teamData;
+      }
+    });
+    
+};
+
+const promptEngineer = () => {
+  // If there's no 'engineer' array property, create one
+  if (!teamData.employee) {
+    teamData.employee = [];
+  }
+  console.log(`
+  =================
+  Add a New Engineer
+  =================
+  `);
+
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Enter the engineer's name? (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter name!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Enter engineer's id (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter id!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Enter engineer's email (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter email!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
         name: "github",
-        message: "Enter the employee's GitHub? (Required)",
+        message: "Enter the engineer's GitHub? (Required)",
         validate: (nameInput) => {
           if (nameInput) {
             return true;
@@ -87,13 +154,15 @@ const promptEngineer = () => {
         message: "Would you like to enter another Employee",
         default: false,
       },
+     
     ])
     .then((employeeData) => {
-      teamData.engineer.push(employeeData);
+      const engineer = new Engineer(employeeData.name, employeeData.id, employeeData.email, employeeData.github);
+      teamData.employee.push(engineer);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
-        console.log(teamData);
+      //  console.log(teamData);
         return teamData;
       }
     });
@@ -101,11 +170,56 @@ const promptEngineer = () => {
 
 const promptIntern = () => {
   // If there's no 'employees' array property, create one
-  if (!teamData.intern) {
-    teamData.intern = [];
+  if (!teamData.employee) {
+    teamData.employee = [];
   }
+  console.log(`
+      =================
+      Add a New Intern
+      =================
+      `);
+
   return inquirer
     .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "Enter the intern's name? (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter name!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "Enter intern's id (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter id!");
+            return false;
+          }
+        },
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Enter intern's email (Required)",
+        validate: (nameInput) => {
+          if (nameInput) {
+            return true;
+          } else {
+            console.log("Please enter email!");
+            return false;
+          }
+        },
+      },
       {
         type: "input",
         name: "school",
@@ -127,11 +241,12 @@ const promptIntern = () => {
       },
     ])
     .then((employeeData) => {
-      teamData.intern.push(employeeData);
+      const intern = new Intern(employeeData.name, employeeData.id, employeeData.email, employeeData.school);
+      teamData.push(intern);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
-        console.log(teamData);
+       // console.log(teamData);
         return teamData;
       }
     });
@@ -139,58 +254,10 @@ const promptIntern = () => {
 
 const promptEmployee = (teamData) => {
   // If there's no 'employees' array property, create one
-  if (!teamData.employee) {
-    teamData.employee = [];
-  }
+  // if (!teamData.employee) {
+  //   teamData.employee = [];
+  // }
 
-  console.log(`
-      =================
-      Add a New Employee
-      =================
-      `);
-  return inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "name",
-        message: "Enter the emplyee's name? (Required)",
-        validate: (nameInput) => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please enter name!");
-            return false;
-          }
-        },
-      },
-      {
-        type: "input",
-        name: "id",
-        message: "Enter employee's id (Required)",
-        validate: (nameInput) => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please enter id!");
-            return false;
-          }
-        },
-      },
-      {
-        type: "input",
-        name: "email",
-        message: "Enter employee's email (Required)",
-        validate: (nameInput) => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please enter email!");
-            return false;
-          }
-        },
-      },
-    ])
-    .then((checkType) => {
       let employeeType = {
         type: "list",
         name: "eType",
@@ -205,44 +272,24 @@ const promptEmployee = (teamData) => {
         }
       });
       console.log(checkType);
-    })
-    .then((employeeData) => {
-      teamData.employee.push(employeeData);
-      if (employeeData.confirmAddEmployee) {
-        console.log(teamData);
-        return promptEmployee(teamData);
-      } else {
-        console.log(teamData);
-        return teamData;
-      }
-    });
-};
-
-// .then(response => {
-//   const employee = new Employee(response.managerName, response.id, response.email, response.officeNumber)
-//   teamData.employee.push(employee)
-//   if (response.confirmAddEmployee) {
-//         return promptEmployee(teamData);
-//       } else {
-//         return teamData;
-//       }
-// });
+    };
 
 promptManager()
   .then(promptEmployee)
   .then((teamData) => {
+    console.log(teamData);
     return generatePage(teamData);
   })
   .then((pageHTML) => {
     return writeFile(pageHTML);
   })
-  .then((writeFileResponse) => {
-    console.log(writeFileResponse);
-    // return copyFile();
-  })
-  //   .then((copyFileResponse) => {
-  //     console.log(copyFileResponse);
-  //   })
+//   .then((writeFileResponse) => {
+//     console.log(writeFileResponse);
+//     return copyFile();
+//  })
+//     .then((copyFileResponse) => {
+//       console.log(copyFileResponse);
+//     })
   .catch((err) => {
     console.log(err);
   });
