@@ -35,22 +35,27 @@ const generateInterns = internArr => {
         `;
     }
 
-const generateEngineer = (engineer) => {
-  if (!engineer) {
+const generateEngineer = (engineerArr) => {
+  if (!engineerArr) {
     return "";
   }
   return `
-          <div class="card-header bg-dark text-light">
-            <h4> ${engineer}</h4>
-            <h4> ${engineer}</h4>
-            <ul id="managerInfo" class="list-group list-group-flush">
-              <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${engineer}</li>
-              <li class="list-group-item"><a href="mailto:${engineer}">Email Address</a>
-              <li class="m-1"><p>School Name</p>${engineer}</li>
-            </ul>
-          </div>
+        <div class="card-header bg-dark text-light">
+        ${engineerArr.map(({name, id, role, email, school}) => {
+        return `
+          <h4> ${role} </h4>
+          <h4> ${name} </h4>
+          <ul id="managerInfo" class="list-group list-group-flush">
+            <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${id}</li>
+            <li class="list-group-item"><a href="mailto:${email}">Email Address</a>
+            <li class="m-1"><p>School Name</p>${school}</li>
+          </ul>
+        </div>
+      `;
+      })
+        .join('')}
         `;
-};
+    }
 
 module.exports = (templateData) => {
   // destructure page data by section
@@ -69,8 +74,7 @@ module.exports = (templateData) => {
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Public+Sans:300i,300,500&display=swap">
-
-     <!-- <link rel="stylesheet" href="style.css" -->
+     <link rel="stylesheet" href="style.css">
     </head>
   
     <body>
@@ -102,5 +106,3 @@ module.exports = (templateData) => {
     </html>
     `;
 };
-
-//   ${generateEmployee(employee)}

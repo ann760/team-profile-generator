@@ -1,5 +1,5 @@
 const Manager = require("../lib/Manager");
-const manager = new Manager("Dave", 1, "dave@email","ann760")
+const manager = new Manager("Dave", 1, "dave@email","Manager", "ann760")
 
 test("gets the managerr's github", () => {
     

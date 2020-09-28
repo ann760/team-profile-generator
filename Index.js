@@ -73,11 +73,6 @@ const promptManager = () => {
     .then((employeeData) => {
       const manager = new Manager(employeeData.managerName, employeeData.id, employeeData.email, "Manager", employeeData.officeNumber);
       teamData.push(manager);
-      if (employeeData.confirmAddEmployee) {
-        return promptEmployee(teamData);
-      } else {
-        return teamData;
-      }
     });
     
 };
@@ -275,17 +270,16 @@ promptManager()
   .then((pageHTML) => {
     return writeFile(pageHTML);
   })
-//   .then((writeFileResponse) => {
-//     console.log(writeFileResponse);
-//     return copyFile();
-//  })
-//     .then((copyFileResponse) => {
-//       console.log(copyFileResponse);
-//     })
+  .then((writeFileResponse) => {
+    console.log(writeFileResponse);
+    return copyFile();
+ })
+    .then((copyFileResponse) => {
+      console.log(copyFileResponse);
+    })
   .catch((err) => {
     console.log(err);
   });
-//console.log("Style sheet copied successfully!");
 
 const writeFile = (fileContent) => {
   return new Promise((resolve, reject) => {
@@ -306,10 +300,10 @@ const writeFile = (fileContent) => {
   });
 };
 
-// fs.copyFile('./src/style.css', './dist/style.css', err => {
-//   if (err) {
-//     console.log(err);
-//     return;
-//   }
-//   console.log('Style sheet copied successfully!');
-// })
+fs.copyFile('./src/style.css', './dist/style.css', err => {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  //console.log('Style sheet copied successfully!');
+})
