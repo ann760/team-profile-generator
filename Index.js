@@ -2,8 +2,8 @@ const inquirer = require("inquirer");
 const generatePage = require("./src/page-template");
 const fs = require("fs");
 const Engineer = require("./lib/Engineer");
-const Mananger = require("./lib/Manager");
-const Intern= require("./lib/Intern");
+const Manager = require("./lib/Manager");
+const Intern = require("./lib/Intern");
 const teamData = [];
 
 
@@ -71,12 +71,11 @@ const promptManager = () => {
       },
     ]) 
     .then((employeeData) => {
-      const manager = new Mananger(employeeData.managerName, employeeData.id, employeeData.email, employeeData.officeNumber, Mananger.getRole());
+      const manager = new Manager(employeeData.managerName, employeeData.id, employeeData.email, "Manager", employeeData.officeNumber);
       teamData.push(manager);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
-        console.log(teamData);
         return teamData;
       }
     });
@@ -157,12 +156,11 @@ const promptEngineer = () => {
      
     ])
     .then((employeeData) => {
-      const engineer = new Engineer(employeeData.name, employeeData.id, employeeData.email, employeeData.github);
+      const engineer = new Engineer(employeeData.name, employeeData.id, employeeData.email, "Engineer", employeeData.github);
       teamData.employee.push(engineer);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
-      //  console.log(teamData);
         return teamData;
       }
     });
@@ -241,23 +239,17 @@ const promptIntern = () => {
       },
     ])
     .then((employeeData) => {
-      const intern = new Intern(employeeData.name, employeeData.id, employeeData.email, employeeData.school);
+      const intern = new Intern(employeeData.name, employeeData.id, employeeData.email, "Intern", employeeData.school);
       teamData.push(intern);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
-       // console.log(teamData);
         return teamData;
       }
     });
 };
 
 const promptEmployee = (teamData) => {
-  // If there's no 'employees' array property, create one
-  // if (!teamData.employee) {
-  //   teamData.employee = [];
-  // }
-
       let employeeType = {
         type: "list",
         name: "eType",
@@ -277,7 +269,7 @@ const promptEmployee = (teamData) => {
 promptManager()
   .then(promptEmployee)
   .then((teamData) => {
-    console.log(teamData);
+  //  console.log(teamData);
     return generatePage(teamData);
   })
   .then((pageHTML) => {
