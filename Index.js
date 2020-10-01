@@ -1,20 +1,24 @@
 const inquirer = require("inquirer");
 const generatePage = require("./src/page-template");
 const fs = require("fs");
+//const writeFile = require('./utils/generate-site.js');
+//const copyFile = require('./utils/generate-site.js');
 const Engineer = require("./lib/Engineer");
 const Manager = require("./lib/Manager");
 const Intern = require("./lib/Intern");
-const teamData = [];
-
+const teamData = {};
 
 const promptManager = () => {
+  if (!teamData.manager) {
+    teamData.manager = [];
+  }
 
   console.log(`
   =================
-  Add a New Manager
+  Add a Manager
   =================
   `);
-  
+
   return inquirer
     .prompt([
       {
@@ -69,18 +73,23 @@ const promptManager = () => {
           }
         },
       },
-    ]) 
+    ])
     .then((employeeData) => {
-      const manager = new Manager(employeeData.managerName, employeeData.id, employeeData.email, "Manager", employeeData.officeNumber);
-      teamData.push(manager);
+      const manager = new Manager(
+        employeeData.managerName,
+        employeeData.id,
+        employeeData.email,
+        "Manager",
+        employeeData.officeNumber
+      );
+      teamData.manager.push(manager);
     });
-    
 };
 
 const promptEngineer = () => {
   // If there's no 'engineer' array property, create one
-  if (!teamData.employee) {
-    teamData.employee = [];
+  if (!teamData.engineers) {
+    teamData.engineers = [];
   }
   console.log(`
   =================
@@ -148,11 +157,16 @@ const promptEngineer = () => {
         message: "Would you like to enter another Employee",
         default: false,
       },
-     
     ])
     .then((employeeData) => {
-      const engineer = new Engineer(employeeData.name, employeeData.id, employeeData.email, "Engineer", employeeData.github);
-      teamData.employee.push(engineer);
+      const engineer = new Engineer(
+        employeeData.name,
+        employeeData.id,
+        employeeData.email,
+        "Engineer",
+        employeeData.github
+      );
+      teamData.engineers.push(engineer);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
@@ -163,8 +177,8 @@ const promptEngineer = () => {
 
 const promptIntern = () => {
   // If there's no 'employees' array property, create one
-  if (!teamData.employee) {
-    teamData.employee = [];
+  if (!teamData.interns) {
+    teamData.interns = [];
   }
   console.log(`
       =================
@@ -234,8 +248,14 @@ const promptIntern = () => {
       },
     ])
     .then((employeeData) => {
-      const intern = new Intern(employeeData.name, employeeData.id, employeeData.email, "Intern", employeeData.school);
-      teamData.push(intern);
+      const intern = new Intern(
+        employeeData.name,
+        employeeData.id,
+        employeeData.email,
+        "Intern",
+        employeeData.school
+      );
+      teamData.interns.push(intern);
       if (employeeData.confirmAddEmployee) {
         return promptEmployee(teamData);
       } else {
@@ -245,41 +265,21 @@ const promptIntern = () => {
 };
 
 const promptEmployee = (teamData) => {
-      let employeeType = {
-        type: "list",
-        name: "eType",
-        message: "Select the employee type? (Required)",
-        choices: ["Engineer", "Intern"],
-      };
-      return inquirer.prompt(employeeType).then((type) => {
-        if (type.eType === "Engineer") {
-          return promptEngineer();
-        } else {
-          return promptIntern();
-        }
-      });
-      console.log(checkType);
-    };
-
-promptManager()
-  .then(promptEmployee)
-  .then((teamData) => {
-  //  console.log(teamData);
-    return generatePage(teamData);
-  })
-  .then((pageHTML) => {
-    return writeFile(pageHTML);
-  })
-  .then((writeFileResponse) => {
-    console.log(writeFileResponse);
-    return copyFile();
- })
-    .then((copyFileResponse) => {
-      console.log(copyFileResponse);
-    })
-  .catch((err) => {
-    console.log(err);
+  let employeeType = {
+    type: "list",
+    name: "eType",
+    message: "Select the employee type? (Required)",
+    choices: ["Engineer", "Intern"],
+  };
+  return inquirer.prompt(employeeType).then((type) => {
+    if (type.eType === "Engineer") {
+      return promptEngineer();
+    } else {
+      return promptIntern();
+    }
   });
+  console.log(checkType);
+};
 
 const writeFile = (fileContent) => {
   return new Promise((resolve, reject) => {
@@ -290,7 +290,6 @@ const writeFile = (fileContent) => {
         // return out of the function
         return;
       }
-
       // if good, resolve the Promise and send the successful data to the `.then()` method
       resolve({
         ok: true,
@@ -300,10 +299,29 @@ const writeFile = (fileContent) => {
   });
 };
 
-fs.copyFile('./src/style.css', './dist/style.css', err => {
+fs.copyFile("./src/style.css", "./dist/style.css", (err) => {
   if (err) {
     console.log(err);
     return;
   }
-  //console.log('Style sheet copied successfully!');
-})
+});
+
+promptManager()
+  .then(promptEmployee)
+  .then((teamData) => {
+    //  console.log(teamData);
+    return generatePage(teamData);
+  })
+  .then((pageHTML) => {
+    return writeFile(pageHTML);
+  })
+  .then((writeFileResponse) => {
+    console.log(writeFileResponse);
+    return copyFile();
+  })
+  .then((copyFileResponse) => {
+    console.log(copyFileResponse);
+  })
+  .catch((err) => {
+    console.log(err);
+  });

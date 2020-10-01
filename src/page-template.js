@@ -1,16 +1,21 @@
 const generateManager = (manager) => {
   return ` 
+  ${manager.map(({name, id, role, email, officeNumber}) => {
+    return `
     <div class="card-header bg-dark text-light"> 
-      <h4> ${manager}</h4>
-      <h4> ${manager}</h4>
+      <h4> ${role}</h4>
+      <h4> ${name}</h4>
       <ul id="managerInfo" class="list-group list-group-flush">
-        <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${manager}</li>
-        <li class="list-group-item"><a href="mailto:${manager}">Email Address</a>
-        <li class="m-1"><p>School Name</p>${manager}</li>
+        <li class="id"><p>ID Number</p>${id}</li>
+        <li class="list-group-item"><a href="mailto:${email}">Email Address</a>
+        <li class="m-1"><p>Office Number</p>${officeNumber}</li>
       </ul>
     </div>
   `;
-};
+  })
+  .join('')}
+  `;
+}
 
 const generateInterns = internArr => {
   if (!internArr) {
@@ -24,7 +29,7 @@ const generateInterns = internArr => {
           <h4> ${role} </h4>
           <h4> ${name} </h4>
           <ul id="managerInfo" class="list-group list-group-flush">
-            <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${id}</li>
+            <li class="id"><p>ID Number</p>${id}</li>
             <li class="list-group-item"><a href="mailto:${email}">Email Address</a>
             <li class="m-1"><p>School Name</p>${school}</li>
           </ul>
@@ -41,14 +46,14 @@ const generateEngineer = (engineerArr) => {
   }
   return `
         <div class="card-header bg-dark text-light">
-        ${engineerArr.map(({name, id, role, email, school}) => {
+        ${engineerArr.map(({name, id, role, email, github}) => {
         return `
           <h4> ${role} </h4>
           <h4> ${name} </h4>
           <ul id="managerInfo" class="list-group list-group-flush">
-            <li class="listInfo badge badge-primary badge-pill"><p>ID Number</p>${id}</li>
+            <li class="id"><p>ID Number</p>${id}</li>
             <li class="list-group-item"><a href="mailto:${email}">Email Address</a>
-            <li class="m-1"><p>School Name</p>${school}</li>
+            <li class="m-1"><p>Git Hub</p>${github}</li>
           </ul>
         </div>
       `;
@@ -59,7 +64,7 @@ const generateEngineer = (engineerArr) => {
 
 module.exports = (templateData) => {
   // destructure page data by section
-  const { manager, engineer, intern } = templateData;
+  const { manager, engineers, interns } = templateData;
   console.log(templateData);
 
   return `
@@ -92,10 +97,12 @@ module.exports = (templateData) => {
         </div>
         <!-- employee-->
         <div class="col-12 col-md-6 col-xl-3 mb-3" id="cards">
-          ${generateInterns(intern)}
-          ${generateEngineer(engineer)}
+        ${generateEngineer(engineers)}
         </div>
-      </div>
+        <div class="col-12 col-md-6 col-xl-3 mb-3" id="cards">
+          ${generateInterns(interns)}
+        </div>
+     
 
       </main>
       <footer class="container text-center py-3">

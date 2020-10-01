@@ -41,7 +41,7 @@ https://
  * requires installing node js, inquirer, and jest
 
 
-![img](./assets/images/wordsearchModal.jpg)
+![img](.dist/teamGenerator.jpg)
 
 
 ## Tested on the following browser
